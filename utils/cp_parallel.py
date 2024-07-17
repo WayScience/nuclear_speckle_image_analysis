@@ -3,13 +3,16 @@ This collection of functions runs CellProfiler in parallel and can convert the r
 for each process.
 """
 
-import multiprocessing
 import logging
-from typing import List
+import multiprocessing
 import os
-import subprocess
 import pathlib
-from concurrent.futures import ProcessPoolExecutor, Future
+import subprocess
+
+from concurrent.futures import Future, ProcessPoolExecutor
+from logging import FileHandler, Formatter
+from typing import List
+
 from errors.exceptions import MaxWorkerError
 
 
@@ -27,22 +30,31 @@ def results_to_log(
     """
     # Access the command (args) and stderr (output) for each CompletedProcess object
     for result in results:
-        # assign plate name and decode the CellProfiler output to use in log file
+        # Extract plate name and decode output
         plate_name = result.args[6].name
         output_string = result.stderr.decode("utf-8")
+        log_file_path = log_dir / f"{plate_name}_{run_name}_run.log"
 
-        # set log file name as plate name from command
-        log_file_path = pathlib.Path(f"{log_dir}/{plate_name}_{run_name}_run.log")
-        # print output to a log file for each plate to view after the run
-        # set up logging configuration
-        log_format = "[%(asctime)s] [Process ID: %(process)d] %(message)s"
-        logging.basicConfig(
-            filename=log_file_path, level=logging.INFO, format=log_format
-        )
+        # Create and configure a logger for this plate
+        logger = logging.getLogger(f"{run_name}_{plate_name}")
+        logger.setLevel(logging.INFO)
 
-        # log plate name and output string
-        logging.info(f"Plate Name: {plate_name}")
-        logging.info(f"Output String: {output_string}")
+        # Avoid adding multiple handlers to the same logger
+        if not logger.handlers:
+            fh = FileHandler(log_file_path)
+            log_format = "[%(asctime)s] [Process ID: %(process)d] %(message)s"
+            formatter = Formatter(log_format)
+            fh.setFormatter(formatter)
+            logger.addHandler(fh)
+
+        # Log the information
+        logger.info(f"Plate Name: {plate_name}")
+        logger.info(f"Output String: {output_string}")
+
+        # Explicitly close and remove the handler after logging
+        for handler in logger.handlers[:]:
+            handler.close()
+            logger.removeHandler(handler)
 
 
 def run_cellprofiler_parallel(
@@ -127,7 +139,7 @@ def run_cellprofiler_parallel(
 
     print("All processes have been completed!")
 
-    # for each process, confirm that the process completed succesfully and return a log file
+    # for each process, confirm that the process completed successfully and return a log file
     for result in results:
         plate_name = result.args[6].name
         # convert the results into log files
