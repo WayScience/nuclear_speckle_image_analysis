@@ -30,7 +30,9 @@ import cp_parallel
 run_name = "illum_correction"
 
 # path to IC pipeline
-path_to_pipeline = pathlib.Path("./pipeline/illumination_correction.cppipe").resolve(strict=True)
+path_to_pipeline = pathlib.Path("./pipeline/illumination_correction.cppipe").resolve(
+    strict=True
+)
 
 # set main output dir for all plates
 output_dir = pathlib.Path("./IC_corrected_images")
