@@ -4,5 +4,14 @@
 # Ignore max-projected images since it would be too large
 1.max_projection/max_projected_images
 
+# Ignore illumination corrected images due to large size
+2.illumination_correction/IC_corrected_images
+
 # Ignore python related files/folders
 __pycache__/
+
+# Ignore log files since those are created during runs
+logs*
+
+# Ignore SQLite outputs from CP analysis due to large size
+analysis_output*
