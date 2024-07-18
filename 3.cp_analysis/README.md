@@ -8,7 +8,8 @@ Features extracted include:
 - Granularity
 - Texture
 - Correlation
-- Area and Shape
+- Radial distribution
+- Area and shape
 
 It took approximately 9 hours in total to process all plates in parallel.
 
