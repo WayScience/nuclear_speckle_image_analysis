@@ -174,7 +174,7 @@ MeasureTexture:[module_num:13|svn_version:'Unknown'|variable_revision_number:7|s
     Measure whole images or objects?:Both
     Texture scale to measure:3
 
-ExportToDatabase:[module_num:14|svn_version:'Unknown'|variable_revision_number:28|show_window:False|notes:['Export data to a SQLite file. Using deault parameters for caluclating mean measurements per image.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+ExportToDatabase:[module_num:14|svn_version:'Unknown'|variable_revision_number:28|show_window:False|notes:['Export data to a SQLite file. Using default parameters for caluclating mean measurements per image.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Database type:SQLite
     Database name:DefaultDB
     Add a prefix to table names?:No

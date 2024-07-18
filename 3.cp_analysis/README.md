@@ -2,7 +2,13 @@
 
 In this module, we perform single nuclei segmentation using the DAPI channel. 
 Using the nuclei masks generated, features are extracted per nuclei across each channel.
-Features include intensity, granularity, texture, radial distribution, neighbors, and area + shape.
+Features extracted include:
+
+- Intensity
+- Granularity
+- Texture
+- Correlation
+- Area and Shape
 
 It took approximately 9 hours in total to process all plates in parallel.
 
