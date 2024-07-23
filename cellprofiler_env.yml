@@ -13,6 +13,7 @@ dependencies:
 - conda-forge::numpy
 - conda-forge::pyyaml
 - conda-forge::matplotlib
+- conda-forge::umap-learn
 - conda-forge::seaborn
 - conda-forge::pandas
 # this package must be hardcoded to work with Mac 

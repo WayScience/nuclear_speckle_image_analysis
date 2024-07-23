@@ -15,3 +15,9 @@ logs*
 
 # Ignore SQLite outputs from CP analysis due to large size
 analysis_output*
+
+# Ignore CytoTable logs
+runinfo*
+
+# Ignore processed features due to large size
+4.preprocess_features/data*
