@@ -1,4 +1,3 @@
-# Visualize UMAP embeddings for each plate using FOV cell count and treatment
 suppressPackageStartupMessages(library(ggplot2)) #plotting
 suppressPackageStartupMessages(library(dplyr)) #work with data frames
 

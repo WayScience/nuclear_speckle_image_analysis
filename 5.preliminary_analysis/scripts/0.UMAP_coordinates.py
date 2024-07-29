@@ -71,6 +71,8 @@ desired_columns = [
     "Metadata_CellLine",
     "Metadata_Condition",
     "Metadata_Nuclei_Site_Count",
+    "Metadata_Nuclei_Location_Center_X",
+    "Metadata_Nuclei_Location_Center_Y"
 ]
 
 # Fit UMAP features per dataset and save
@@ -138,13 +140,46 @@ sorted_df.head(10)
 
 
 # Filter rows where UMAP1 column has values above 10
-filtered_df = cp_umap_with_metadata_df[cp_umap_with_metadata_df['UMAP1'] > 10]
+filtered_df = cp_umap_with_metadata_df[cp_umap_with_metadata_df['UMAP1'] < 0]
 
 # Print the shape of the filtered DataFrame
 print(filtered_df.shape)
 
 # Display the first 10 rows of the filtered DataFrame
-filtered_df.head(10)
+filtered_df
+
+
+# In[9]:
+
+
+# Group by Metadata_Well and Metadata_Site and count the number of unique combinations
+combo_counts = filtered_df.groupby(['Metadata_Well', 'Metadata_Site']).size().reset_index(name='counts')
+
+# Display the resulting DataFrame with counts
+print(combo_counts)
+
+
+# In[10]:
+
+
+# Filter rows where UMAP1 column has values above 10
+filtered_df = cp_umap_with_metadata_df[cp_umap_with_metadata_df['UMAP0'] > 5]
+
+# Print the shape of the filtered DataFrame
+print(filtered_df.shape)
+
+# Display the first 10 rows of the filtered DataFrame
+filtered_df
+
+
+# In[11]:
+
+
+# Group by Metadata_Well and Metadata_Site and count the number of unique combinations
+combo_counts = filtered_df.groupby(['Metadata_Well', 'Metadata_Site']).size().reset_index(name='counts')
+
+# Display the resulting DataFrame with counts
+print(combo_counts)
 
 
 # In[ ]:

@@ -2,7 +2,7 @@ CellProfiler Pipeline: http://www.cellprofiler.org
 Version:5
 DateRevision:426
 GitHash:
-ModuleCount:14
+ModuleCount:16
 HasImagePlaneDetails:False
 
 Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['We will be processing the data using the CLI with CP Parallel, so this module will be empty and only used with the GUI for testing.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -174,7 +174,33 @@ MeasureTexture:[module_num:13|svn_version:'Unknown'|variable_revision_number:7|s
     Measure whole images or objects?:Both
     Texture scale to measure:3
 
-ExportToDatabase:[module_num:14|svn_version:'Unknown'|variable_revision_number:28|show_window:False|notes:['Export data to a SQLite file. Using default parameters for caluclating mean measurements per image.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+ConvertObjectsToImage:[module_num:14|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:['Convert objects to a binary image to save for downstream analysis.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:Nuclei
+    Name the output image:MaskNuclei
+    Select the color format:Binary (black & white)
+    Select the colormap:Default
+
+SaveImages:[module_num:15|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:['Save binary nuclei masks using the DAPI file names with a _MaskNuclei suffix.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the type of image to save:Image
+    Select the image to save:MaskNuclei
+    Select method for constructing file names:From image filename
+    Select image name for file prefix:DAPI
+    Enter single file name:OrigBlue
+    Number of digits:4
+    Append a suffix to the image file name?:Yes
+    Text to append to the image name:_MaskNuclei
+    Saved file format:tiff
+    Output file location:Default Output Folder|
+    Image bit depth:16-bit integer
+    Overwrite existing files without warning?:No
+    When to save:Every cycle
+    Record the file and path information to the saved image?:No
+    Create subfolders in the output folder?:No
+    Base image folder:Elsewhere...|
+    How to save the series:T (Time)
+    Save with lossless compression?:Yes
+
+ExportToDatabase:[module_num:16|svn_version:'Unknown'|variable_revision_number:28|show_window:False|notes:['Export data to a SQLite file. We will not output any mean or median values of per image measurements.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Database type:SQLite
     Database name:DefaultDB
     Add a prefix to table names?:No
@@ -185,7 +211,7 @@ ExportToDatabase:[module_num:14|svn_version:'Unknown'|variable_revision_number:2
     Username:
     Password:
     Name the SQLite database file:nuc_speckle_analysis.sqlite
-    Calculate the per-image mean values of object measurements?:Yes
+    Calculate the per-image mean values of object measurements?:No
     Calculate the per-image median values of object measurements?:No
     Calculate the per-image standard deviation values of object measurements?:No
     Calculate the per-well mean values of object measurements?:No
