@@ -50,7 +50,7 @@ plate_names = []
 # iterate through metadata dir and append plate names from metadata files
 for file_path in platemap_dir.iterdir():
     filename = file_path.stem
-    first_index = filename.split(".")[0]
+    first_index = filename.split("_")[0]
     plate_names.append(first_index)
 
 # print the plate names and how many plates there are (confirmation)
@@ -129,6 +129,7 @@ for plate_folder in parquet_dir.iterdir():
             "Image_Metadata_Site",
             "Image_Metadata_Well",
             "Image_Count_Nuclei",
+            "Image_FileName_DAPI"
         ]
 
         # Create nuclei (single-cell) data frame
@@ -137,7 +138,7 @@ for plate_folder in parquet_dir.iterdir():
             + [col for col in plate_df.columns if col.startswith("Nuclei_")]
         ]
 
-        # Create image (bulk) data frame and groupby well
+        # Create image (bulk) data frame
         image_df = plate_df[
             ["Metadata_ImageNumber"]
             + [col for col in plate_df.columns if col.startswith("Image_")]
@@ -152,16 +153,4 @@ for plate_folder in parquet_dir.iterdir():
         # nuclei_df and image_df shape and one data frame to assess all looks correct
         print("Shape of nuclei data frame", nuclei_df.shape)
         print("Shape of image data frame", image_df.shape)
-
-
-# In[6]:
-
-
-nuclei_df
-
-
-# In[ ]:
-
-
-
 

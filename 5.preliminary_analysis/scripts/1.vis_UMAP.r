@@ -1,6 +1,6 @@
-# Visualize UMAP embeddings for each plate using FOV cell count and treatment
 suppressPackageStartupMessages(library(ggplot2)) #plotting
 suppressPackageStartupMessages(library(dplyr)) #work with data frames
+suppressPackageStartupMessages(library(ggExtra)) #marginal density plot to add to UMAP
 
 # Set directory and file structure
 umap_dir <- file.path("results")
@@ -65,13 +65,27 @@ for (plate in names(umap_cp_df)) {
     condition_gg <- (
         ggplot(umap_cp_df[[plate]], aes(x = UMAP0, y = UMAP1))
         + geom_point(
-            aes(color = Metadata_Condition), size = 1.2, alpha = 0.6
+            aes(color = Metadata_Condition), size = 0.8, alpha = 0.6
         )
         + theme_bw()
         + scale_color_brewer(palette = "Dark2")
+        + labs(color = "siRNA Treatment")  # Change legend title
+        + theme(
+            legend.position = "left"
+        )
+    )
+
+    # Add marginal density plots
+    condition_gg_marginal <- ggMarginal(
+        condition_gg,
+        type = "density",
+        margins = "both",
+        size = 5,
+        groupColour = TRUE,
+        groupFill = TRUE,
     )
     
-    ggsave(condition_output_file, condition_gg, dpi = 500, height = 6, width = 6)
+    ggsave(condition_output_file, condition_gg_marginal, dpi = 500, height = 6, width = 6)
 
     # UMAP labeled with cell count
     cell_count_output_file <- paste0(output_umap_files[[plate]], "_cell_count.png")
@@ -85,9 +99,11 @@ for (plate in names(umap_cp_df)) {
         + theme(
             strip.background = element_rect(colour = "black", fill = "#fdfff4")
         )
-        + scale_color_continuous(name = "Number of\nsingle cells\nper FOV")
+        + scale_color_viridis_c(name = "Number of\nsingle cells\nper FOV", direction = -1, option = "inferno")
     )
 
     ggsave(cell_count_output_file, umap_cell_count_gg, dpi = 500, height = 6, width = 6)
 }
+
+
 

@@ -9,4 +9,4 @@ conda activate nuclear_speckle_cp_env
 jupyter nbconvert --to script --output-dir=scripts/ *.ipynb
 
 # run python script to analyze plates
-python scripts/cp_ic.py
+python scripts/2.cp_ic.py

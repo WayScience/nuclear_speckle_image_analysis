@@ -21,3 +21,9 @@ runinfo*
 
 # Ignore processed features due to large size
 4.preprocess_features/data*
+
+# Ignore QC results as these are intermediate files
+2.illumination_correction/qc_results*
+
+# Ignore any folder called "old" as it contains previous runs that can be used for comparisons
+old*
