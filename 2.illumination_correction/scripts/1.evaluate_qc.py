@@ -96,7 +96,7 @@ df.head()
 
 sns.set_style('whitegrid')
 sns.kdeplot(data=df, x='ImageQuality_PowerLogLogSlope', hue='Channel', palette=['b'],fill=True, common_norm=False)
-plt.title(f'Density plots per channel for all plates')
+plt.title(f'Density of PowerLogLogSlope in DAPI channel for all plates')
 plt.xlabel('ImageQuality_PowerLogLogSlope')
 plt.ylabel('Density')
 
@@ -161,7 +161,7 @@ sns.histplot(df['ImageQuality_PercentMaximal'], color='skyblue', alpha=0.7)
 # Set labels and title
 plt.ylabel('log(count)')
 plt.xlabel('Percent Maximal')
-plt.title('Histogram plot of percent maximal for all plates')
+plt.title('Distribution of PercentMaximal metric in the DAPI channel for all plates')
 plt.yscale('log')  # Set y-axis to logarithmic scale
 plt.tight_layout()
 

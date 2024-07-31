@@ -3,30 +3,28 @@
 
 # # Perform single-cell quality control
 # 
-# In this notebook, we perform single-cell quality control. 
-# To filter the single-cells, we use z-score to find outliers using the values from only one feature at a time. 
-# We use features from the AreaShape and Intensity module to assess the quality of the segmented single-cells:
+# In this notebook, we perform single-cell quality control using coSMicQC.
+# To filter the single-cells, the default method is z-score to find outliers using the values from only one feature at a time. 
+# We use features from the AreaShape module to assess the quality of the segmented single-cells:
 # 
 # ### Assessing poor nuclei segmentation
 # 
-# Segmentation parameters, though optimized, does not mean it is perfect and will segment all nuclei "correctly".
-# When we say correctly, the basic definition we use is that a segmentation is around a nuclei and it is mostly accurate (can be slightly under or over segmented).
+# Segmentation parameters, though optimized, aren't perfect and may not segment all nuclei "correctly".
+# When we say "correctly", the basic definition we use is that a segmentation is around a nuclei and it is mostly accurate (can be slightly under or over segmented).
 # We are looking to identify technically "incorrect" segmentations, including clusters of nuclei, segmented background, multiple segmentation in one nuclei, etc.
 # To identify nuclei experiencing mis-segmentation, we use:
 # 
 # - **Nuclei Area:** This metric quantifies the number of pixels in a nucleus segmentation. We detect nuclei that are abnormally large or small, which likely indicates poor nucleus segmentation.
 # - **Nuclei FormFactor:** This metric quantifies how circular an object is. The equation used is `4*π*Area/Perimeter^2`. The range of values are 0 to 1 where 1 means a perfect circle and 0 meaning a very odd shaped nuclei. We are looking to remove nuclei that have low `roundness` as we have found these nuclei have rough edges due to the algorithm struggling to segment.
 # - **Nuclei Eccentricity:** This metric quantifies how elongated an ellipse is. The range is 0 to 1 where 1 means it is a line shape and 0 is a circle. We are looking to remove nuclei that are very close to line shape as we have found these are related to mis-segmentations from mKate channel overlap into the Hoechst channel.
-# - **Nuclei Mean Intensity:** This metric quantifies the average intensity of the pixels in the nuclei segmentation when applied to the Hoechst channel. There is no specific range of values, but very small values likely indicate that a segmentation has been made around the background, which is not indicative of biology.
 # 
 # We use these features either in combination or alone when finding technical segmentation errors.
 # To be specific, we use:
 # 
-# | Measurement(s)               | Target                                                                                                          | Notes                                                                                                                                                          |
-# |------------------------------|-----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-# | Nuclei Area + FormFactor     | Small and large area that are very non-circular (small formfactor) | We use two combinations of this where one finds the non-circular small cells and the other non-circular large area.                                                                                                               |
-# | Nuclei Area + Intensity      | Small nuclei with low intensity within the segmentation (in the Hoechst channel) | This combination looks to find segmentations that are likely around background and not nuclei.                                                                                                              |
-# | Nuclei Eccentricity          | Segmentations that look like a straight line (too elongated) | We use this by itself since the poor segmentations can be any size when it is a mis-segmented straight line.                                                                                                         |
+# | Measurement(s)           | Target                                                           | Notes                                                                                                                                                        |
+# |--------------------------|------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+# | Nuclei Area + FormFactor | Small and large area that are very non-circular (small formfactor) | We use two combinations of this where one finds the non-circular small cells and the other non-circular large area.                                           |
+# | Nuclei Eccentricity      | Segmentations that look like a straight line (too elongated)      | We use this by itself since the poor segmentations can be any size when it is a mis-segmented straight line.                                                  |
 # 
 
 # ## Import libraries
@@ -34,14 +32,14 @@
 # In[1]:
 
 
-import matplotlib.pyplot as plt
 import pathlib
 
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 import cosmicqc as cosm
-import matplotlib.colors as mcolors
 
 
 # ## Set paths and variables
@@ -124,7 +122,7 @@ concat_df.head()
 sns.set_style("whitegrid")
 
 # Create subplots with 2 rows and 2 columns
-fig, axes = plt.subplots(1, 3, figsize=(15, 10))
+fig, axes = plt.subplots(1, 3, figsize=(18, 6)) # first is width and second is height
 
 # Flatten the axes array for easy indexing
 axes = axes.flatten()
@@ -168,7 +166,7 @@ sns.kdeplot(
 axes[2].set_title("Eccentricity")
 
 plt.suptitle(
-    "Density plots for all plates confirm distributions are similar for each quality control feature",
+    "Distribution of each quality control feature across all plates",
     fontsize=16,
 )
 plt.tight_layout(rect=[0, 0, 1.0, 1.0])  # Adjust subplot layout
@@ -235,7 +233,7 @@ plt.hexbin(concat_df['Nuclei_AreaShape_Area'], concat_df['Nuclei_AreaShape_FormF
 plt.colorbar(label='Count')
 plt.xlabel('Nuclei Area')
 plt.ylabel('Nuclei FormFactor')
-plt.title('Hexbin plot of Nuclei Area vs FormFactor')
+plt.title('Distribution of single-cell nuclei area and formfactor')
 plt.tight_layout()
 
 # Save figure
@@ -279,7 +277,7 @@ hb = plt.hexbin(concat_df['Nuclei_AreaShape_Area'], concat_df['Nuclei_AreaShape_
 plt.colorbar(hb, label='Outlier Status (0: Passing, 1: Failing)')
 plt.xlabel('Nuclei_AreaShape_Area')
 plt.ylabel('Nuclei_AreaShape_FormFactor')
-plt.title('Hexbin plot of Nuclei Area vs FormFactor colored by Outlier Status')
+plt.title('Outlier status across single-cell nuclei area and formfactor')
 plt.tight_layout()
 
 # Save figure
@@ -337,7 +335,7 @@ sns.histplot(
     legend=True,
 )
 
-plt.title(f"Histogram of Nuclei Eccentricity for all plates")
+plt.title(f"Distribution of single-cell nuclei eccentricity for all plates")
 plt.xlabel("Nuclei Eccentricity")
 plt.ylabel("Single-cell count")
 plt.tight_layout()
@@ -437,10 +435,11 @@ colors = [palette.get(condition, "skyblue") for condition in column_counts.index
 
 # Plot histogram with colors matching the conditions
 plt.figure(figsize=(10, 6))
-plt.bar(column_counts.index, column_counts.values, color=colors)  # Use colors here
+plt.bar(column_counts.index, column_counts.values, color=colors)
+plt.yscale('log')
 plt.title("Count of failed single-cells for each condition")
 plt.xlabel("Condition")
-plt.ylabel("Count of failed single-cells")
+plt.ylabel("Log of the count of failed single-cells")
 plt.xticks(rotation=45)
 plt.tight_layout()
 
