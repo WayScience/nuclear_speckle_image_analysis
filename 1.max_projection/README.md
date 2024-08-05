@@ -22,7 +22,7 @@ The naming convention of the files are as shown below:
 
 `slide2_B4_M55_CH2_Z09.tiff`
 
-- ***slide1*** = slide/plate
+- ***slide2*** = slide/plate
 - ***B4*** = well
 - ***M55*** = site
 - ***CH2*** = channel/stain

@@ -1,12 +1,14 @@
-# Nuclear Speckle Image Profiling
+# Nuclear speckle image-based profiling
 
-In this repository, image analysis and image-based profiling is performed on a nuclear speckle dataset to extract CellProfiler morphology features for predicting nuclear speckle protein markers.
+In this repository, image analysis and image-based profiling are performed on a nuclear speckle dataset to extract CellProfiler morphology features from each channel using nucleus segmentation.
 
 We have 3 channels in this assay:
 
 - **DAPI** - nucleus stain
 - **A647** - SON protein marker for nuclear speckles
-- **GOLD** - SRRM2 protein marker for nuclear speckles
+- **Cy5/GOLD** - SRRM2 protein marker for nuclear speckles
+
+Both of these proteins are essential for nuclear speckle formation.
 
 ![ex_image_montage](./examples/ex_image_montage.png)
 > This montage shows an example image set from one site after maximum projection of 9 z-slices and illumination correction.
@@ -14,6 +16,11 @@ We have 3 channels in this assay:
 There are 2 cell lines in this project, `786O` which is treated with siRNA and `293T` which is not treated.
 Four slides/plates of data have been collected, with 8 wells each.
 Of the plates, there are two layouts with two replicates each.
+
+This dataset will be used for generating two different machine learning models to predict each nuclear speckle protein morphology:
+
+1. Traditional regression machine learning model
+2. Deep learning model
 
 ## Environments
 
