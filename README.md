@@ -22,6 +22,8 @@ This dataset will be used for generating two different machine learning models t
 1. Traditional regression machine learning model
 2. Deep learning model
 
+These pipelines can be found in the analysis repo called [`nuclear_speckles_analysis`](https://github.com/WayScience/nuclear_speckles_analysis).
+
 ## Environments
 
 There are three conda environments we use in this repository:
