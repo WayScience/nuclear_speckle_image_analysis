@@ -16,7 +16,7 @@ Features extracted include:
 To run the CellProfiler analysis pipeline, run the command below:
 
 ```bash
-# Make sure that you are in the 3.cp_analysis folder in terminal
+# Make sure that you are in the 2.cp_analysis folder in terminal
 source analysis.sh
 ```
  
